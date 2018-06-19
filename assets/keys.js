@@ -1,5 +1,9 @@
 console.log('this is loaded');
 
+var spotify = new spotify(keys.spotify);
+var Twitter = new Twitter(keys.twitter);
+var key = new omdb(key.omdb);
+
 exports.twitter = {
     consumer_key: process.env.TWITTER_CONSUMER_KEY,
     consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
@@ -12,5 +16,7 @@ exports.spotify = {
     secret: process.env.SPOTIFY_SECRET
 };
 
-var spotify = new spotify(keys.spotify);
-var client = new Twitter(keys.twitter);
+exports.omdb = {
+    key: OMDB_KEY
+}
+
