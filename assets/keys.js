@@ -1,7 +1,7 @@
 console.log('this is loaded');
 
 var spotify = new spotify(keys.spotify);
-var Twitter = new Twitter(keys.twitter);
+var twitter = new twitter(keys.twitter);
 var key = new omdb(key.omdb);
 
 exports.twitter = {
