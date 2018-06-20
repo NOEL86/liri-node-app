@@ -20,3 +20,6 @@ exports.omdb = {
     key: OMDB_KEY
 }
 
+module.exports(twitter);
+module.exports(spotify);
+module.exports(omdb);
