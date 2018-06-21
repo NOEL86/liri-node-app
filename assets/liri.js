@@ -1,6 +1,6 @@
 console.log("stuffINeed");
 var stuffINeed = require("./keys.js");
-
+var request = require("request");
 require("dotenv").config();
 
 var argumentOne = process.argv[2];
@@ -34,9 +34,15 @@ function twitter() {
 
 }
 
-function movie() {
 
-}
+function movie() {
+    request("http://www.omdbapi.com/?t=Remember+The+Titans&y=&plot=short&type=movie&rating=G&apikey=AIzaSyB_p0WIpiO2nbmIL2MWja2NLh9oiBaJ5d4", function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            console.log(JSON.parse(body));
+        }
+    })
+
+};
 
 
 
@@ -44,13 +50,6 @@ function movie() {
 
 // $.ajax({
 //     url: `https://api.twitter.com/1.1/search/tweets.json?q=nasa&result_type=popular`,
-//     method: "GET"
-// }).then(function (response) {
-//     console.log(response)
-// });
-
-// $.ajax({
-//     url: `http://www.omdbapi.com/?t=${movie}&y=&plot=short&type=movie&rating=G`,
 //     method: "GET"
 // }).then(function (response) {
 //     console.log(response)

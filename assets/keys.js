@@ -3,6 +3,7 @@ console.log('this is loaded');
 var spotify = new spotify(keys.spotify);
 var twitter = new twitter(keys.twitter);
 var key = new omdb(key.omdb);
+var exports = module.exports = {};
 
 exports.twitter = {
     consumer_key: process.env.TWITTER_CONSUMER_KEY,
