@@ -1,5 +1,7 @@
 console.log('this is loaded');
 
+//these are variables used to house our keys 
+//They are not written correctly because I'm not sure how they should look
 var spotify = new spotify(keys.spotify);
 var twitter = new twitter(keys.twitter);
 var key = new omdb(key.omdb);

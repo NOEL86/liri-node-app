@@ -3,9 +3,11 @@ var stuffINeed = require("./keys.js");
 var request = require("request");
 require("dotenv").config();
 
-var argumentOne = process.argv[2];
-var argumentTwo = process.argv[3];
+var argumentOne = process.argv[2]; //whatever command the user enters
+var search = process.argv[3]; // the song, movie or # of popular tweets that is searched by the user
 
+
+//this is the switch statement that decides which search function will run
 switch (argumentOne) {
     case "spotify-this-song":
         spotify();
