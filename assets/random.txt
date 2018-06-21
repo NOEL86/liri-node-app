@@ -1,3 +1,0 @@
-spotify-this-song,"I Want it That Way"
-twitter-this, "popular tweets"
-omdb-this-movie, "Remember the Titans"
