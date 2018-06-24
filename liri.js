@@ -1,25 +1,23 @@
 require("dotenv").config();
-console.log("stuffINeed");
+// console.log("stuffINeed");
 var keys = require("./keys.js");
 var request = require("request");
 var Twitter = require('twitter');
-
-console.log(keys, "this is keys");
+var spotify = require('node-spotify-api');
 
 
 //these are variables used to house our keys 
 //They are not written correctly because I'm not sure how they should look
-var spotify = new spotify(keys.spotify);
+var spotifyApi = new spotify(keys.spotify);
 var twitterApi = new Twitter(keys.twitter);
 
 var argumentOne = process.argv[2]; //whatever command the user enters
 var search = process.argv[3]; // the song, movie or type of tweets that is searched by the user
 
-
 //this is the switch statement that decides which search function will run
 switch (argumentOne) {
-    case "spotify-song":
-        spotify();
+    case "spotify-this":
+        spotifyIt();
         break;
 
     case "tweet-this":
@@ -34,9 +32,22 @@ switch (argumentOne) {
         console.log("liri does not understand your command");
 };
 
-function spotify() {
 
-}
+function spotifyIt() {
+
+    spotifyApi.search({ type: 'artist', query: search, market: 'US' }, function (err, data) {
+        if (!err) {
+
+            for (var i = 0; i < 10; i++) {
+                console.log(data.artists.items[i]);
+            }
+
+        } else {
+            console.log(err);
+        }
+    });
+
+};
 
 function twitter() {
     var params = {
@@ -45,9 +56,7 @@ function twitter() {
 
     twitterApi.get('statuses/user_timeline', params, function (error, tweets, response) {
         if (!error) {
-            console.log(tweets);
-
-
+            // console.log(tweets);
             for (var i = 0; i < tweets.length; i++) {
                 console.log('========================================');
                 console.log(tweets[i].user.name);
@@ -59,22 +68,44 @@ function twitter() {
 
 }
 
-
 function movie() {
-    request(`http://www.omdbapi.com/?t=${search}&y=&plot=short&type=movie&rating=G&apikey=AIzaSyB_p0WIpiO2nbmIL2MWja2NLh9oiBaJ5d4`, function (error, response, body) {
-        if (!error && response.statusCode === 200) {
-            console.log(JSON.parse(body));
+
+    request(`http://www.omdbapi.com/?t=${search}&apikey=Trilogy&plot=short`, function (error, response, body) {
+        if (!error) {
+
+            if (search == "/\s/g") {
+                search.replace("/\s+/g", '');
+            }
+            var newBody = JSON.parse(body);
+            console.log("Movie Title: " + newBody.Title);
+            console.log("The movie's release date is: " + newBody.Year);
+            console.log("The movie's rating is: " + newBody.Rated);
+            console.log("Cast Includes: " + newBody.Actors);
+            console.log("Plot: " + newBody.Plot);
+            console.log("Rotten Tomatoes: " + newBody.Ratings[1].Value);
+            console.log("Language: " + newBody.Language);
         }
-    })
+
+        else {
+            console.log(error);
+        }
+
+    });
+}
+
+function readText() {
+    fs = require('fs')
+    fs.readFile('random.txt', 'utf8', function (err, data) {
+        if (!err) {
+            console.log(data);
+
+        } else {
+            console.log(err);
+            return;
+        }
+    });
 };
 
-
-
-// $.ajax({
-//     url: `https://api.spotify.com/v1/search&q=${song}`,
-//     method: "GET"
-// }).then(function (response) {
-//     console.log(response)
-// });
+readText();
 
 
