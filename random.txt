@@ -1,3 +1,1 @@
-spotify-song,"Michael Jackson"
-tweet-this, "ladygaga"
-omdb-movie, "Remember the Titans"
+spotify-this,Madonna,tweet-this,ladygaga,omdb-movie,Wonder

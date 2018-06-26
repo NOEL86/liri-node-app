@@ -1,10 +1,9 @@
 require("dotenv").config();
-// console.log("stuffINeed");
 var keys = require("./keys.js");
 var request = require("request");
 var Twitter = require('twitter');
 var spotify = require('node-spotify-api');
-
+var fs = require('file-system');
 
 //these are variables used to house our keys 
 //They are not written correctly because I'm not sure how they should look
@@ -13,9 +12,12 @@ var twitterApi = new Twitter(keys.twitter);
 
 var argumentOne = process.argv[2]; //whatever command the user enters
 var search = process.argv[3]; // the song, movie or type of tweets that is searched by the user
+var searchTwo = process.argv[4];
 
 //this is the switch statement that decides which search function will run
+
 switch (argumentOne) {
+
     case "spotify-this":
         spotifyIt();
         break;
@@ -28,17 +30,31 @@ switch (argumentOne) {
         movie();
         break;
 
+    case "do-this":
+        readText();
+        break;
+
     default:
         console.log("liri does not understand your command");
+        readText();
 };
 
 
-function spotifyIt() {
 
-    spotifyApi.search({ type: 'artist', query: search, market: 'US' }, function (err, data) {
+
+
+function spotifyIt() {
+    console.log()
+    if (typeof searchTwo !== 'undefined') {
+        var combinedSearch = search + "%20" + searchTwo;
+    } else {
+        var combinedSearch = search;
+    }
+
+    spotifyApi.search({ type: 'artist', query: combinedSearch, market: 'US' }, function (err, data) {
         if (!err) {
 
-            for (var i = 0; i < 10; i++) {
+            for (var i = 0; i < 4; i++) {
                 console.log(data.artists.items[i]);
             }
 
@@ -50,13 +66,14 @@ function spotifyIt() {
 };
 
 function twitter() {
+
     var params = {
         screen_name: search
     };
 
-    twitterApi.get('statuses/user_timeline', params, function (error, tweets, response) {
+    twitterApi.get('statuses/user_timeline', params, function (error, tweets) {
+
         if (!error) {
-            // console.log(tweets);
             for (var i = 0; i < tweets.length; i++) {
                 console.log('========================================');
                 console.log(tweets[i].user.name);
@@ -64,18 +81,19 @@ function twitter() {
                 console.log("url: ", tweets[i].user.url);
             }
         }
-    });
-
-}
+    })
+};
 
 function movie() {
 
-    request(`http://www.omdbapi.com/?t=${search}&apikey=Trilogy&plot=short`, function (error, response, body) {
-        if (!error) {
+    if (typeof searchTwo !== 'undefined') {
+        var combinedSearch = search + "%20" + searchTwo;
+    } else {
+        var combinedSearch = search;
+    }
 
-            if (search == "/\s/g") {
-                search.replace("/\s+/g", '');
-            }
+    request(`http://www.omdbapi.com/?t=${combinedSearch}&apikey=Trilogy&plot=short`, function (error, response, body) {
+        if (!error) {
             var newBody = JSON.parse(body);
             console.log("Movie Title: " + newBody.Title);
             console.log("The movie's release date is: " + newBody.Year);
@@ -91,21 +109,41 @@ function movie() {
         }
 
     });
-}
-
-function readText() {
-    fs = require('fs')
-    fs.readFile('random.txt', 'utf8', function (err, data) {
-        if (!err) {
-            console.log(data);
-
-        } else {
-            console.log(err);
-            return;
-        }
-    });
 };
 
-readText();
+function readText() {
+
+    fs.readFile('random.txt', 'utf8', function (err, data) {
+
+        if (err) throw err;
+
+        var dataArr = data.split(',');
+
+        console.log(dataArr);
+        if (dataArr[2] === "tweet-this") {
+            console.log("read file function");
+            search = dataArr[3];
+            twitter();
+
+        }
+
+        if (dataArr[0] === "spotify-this") {
+            search = dataArr[1];
+            spotifyIt();
+
+        }
+
+        if (dataArr[4] === "omdb-movie") {
+            search = dataArr[5];
+            movie();
+
+        } else {
+            console.log("Invalid Command! Please try again?")
+        }
+
+    });
+
+
+};
 
 
