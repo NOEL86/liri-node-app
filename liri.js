@@ -35,13 +35,9 @@ switch (argumentOne) {
         break;
 
     default:
-        console.log("liri does not understand your command");
+        console.log("You didn't select an option, try spotify-this, tweet-this or omdb-movie");
         readText();
 };
-
-
-
-
 
 function spotifyIt() {
     console.log()
@@ -92,9 +88,9 @@ function movie() {
         var combinedSearch = search;
     }
 
-    request(`http://www.omdbapi.com/?t=${combinedSearch}&apikey=Trilogy&plot=short`, function (error, response, body) {
+    request(`http://www.omdbapi.com/?t=${combinedSearch}&apikey=Trilogy&plot=short`, function (error, body) {
         if (!error) {
-            var newBody = JSON.parse(body);
+            var newBody = JSON.parse(body.body);
             console.log("Movie Title: " + newBody.Title);
             console.log("The movie's release date is: " + newBody.Year);
             console.log("The movie's rating is: " + newBody.Rated);
@@ -102,9 +98,7 @@ function movie() {
             console.log("Plot: " + newBody.Plot);
             console.log("Rotten Tomatoes: " + newBody.Ratings[1].Value);
             console.log("Language: " + newBody.Language);
-        }
-
-        else {
+        } else {
             console.log(error);
         }
 
